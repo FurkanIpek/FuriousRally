@@ -18,6 +18,5 @@ public:
 	Color getColor() { return color; }
 	double pos() { return center.getZ(); }
 	void draw();
-	void move(double, double, double);
-	Vector getNormalAtPos(Vector&);
+	void move(GLfloat, GLfloat, GLfloat);
 };

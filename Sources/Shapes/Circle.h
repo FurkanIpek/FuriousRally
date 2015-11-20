@@ -14,7 +14,6 @@ public:
 	~Circle();
 
 	Color getColor();
-	Vector getNormalAtPos(Vector&);
 	void draw();
-	void move();
+	void move(GLfloat, GLfloat, GLfloat);
 };

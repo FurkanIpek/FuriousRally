@@ -5,17 +5,22 @@
 class Cube : public Shape {
 
 private:
-	int height;
-	int weight;
-	int depth;
+	GLfloat height;
+	GLfloat width;
+	GLfloat depth;
+	GLfloat front;
+	GLfloat top;
+	GLfloat right;
+
+	bool is_bounding_box;
 
 public:
 	Cube();
-	Cube(Color c, int x, int y, int z, int height, int weight, int depth); // x, y, z is the front-top-right point of the cube
+	Cube(Color color, Vector trf_pos, GLfloat height, GLfloat width, GLfloat depth, bool is_bounding_box = false); // Vector(x,y,z) is the top-right-front point of the cube
 	~Cube();
 
-	Color getColor();
-	Vector getNormalAtPos(Vector&);
+	Color getColor() { return color; }
+	void setColor(Color c) { color = c; }
 	void draw();
-	void move(double, double, double);
+	void move(GLfloat, GLfloat, GLfloat);
 };

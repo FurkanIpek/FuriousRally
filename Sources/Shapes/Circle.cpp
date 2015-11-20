@@ -11,8 +11,6 @@ Color Circle::getColor()
 	return color;
 }
 
-Vector Circle::getNormalAtPos(Vector& vec) { return Vector(0, 0, 0); } // dummy
-
 void Circle::draw()
 {
 	int num_segments = 300;
@@ -30,7 +28,7 @@ void Circle::draw()
 	glEnd();
 }
 
-void Circle::move()
+void Circle::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
 
 }

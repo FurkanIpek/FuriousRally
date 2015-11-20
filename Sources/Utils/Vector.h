@@ -1,25 +1,21 @@
 #pragma once
 
+#include "GL/glew.h"
+
 class Vector {
 
 private:
-	double x, y, z;
+	GLfloat x, y, z;
 
 public:
 	Vector();
-	Vector(double, double, double);
+	Vector(GLfloat, GLfloat, GLfloat);
 
-	double getX();
-	double getY();
-	double getZ();
-	void setX(double);
-	void setY(double);
-	void setZ(double);
-	double Magnitude();
-	Vector Normalize();
-	Vector Negative();
-	double DotProduct(Vector&);
-	Vector CrossProduct(Vector&);
-	Vector VectorAdd(Vector&);
-	Vector VectorMult(double);
+	GLfloat getX();
+	GLfloat getY();
+	GLfloat getZ();
+	void setX(GLfloat);
+	void setY(GLfloat);
+	void setZ(GLfloat);
+
 };

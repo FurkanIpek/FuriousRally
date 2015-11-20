@@ -1,28 +1,27 @@
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <stdio.h>
-#include <iostream>
-
-#include "Sources\Shapes\Triangle.h"
-#include "Sources\Shapes\Sphere.h"
+#include "Utils\includes.h"
 
 Sphere* sphere = new Sphere(Vector(0.5f, 0.05f, 0.0f), 0.5f, Color(0.7f, 0.4f, 0.53f, 0.5f));
 Triangle* triangle = new Triangle(Vector(-0.05f, -0.05f, 0.0f), Vector(0.05f, -0.05f, 0.0f),
 	Vector(0.0f, 0.05f, 0.0f), Color(0.56f, 0.15f, 0.80f, 1.0f));
+Cube* cube = new Cube(Color(0.90f, 0.50f, 0.20f, 0), Vector(0.5f, 0.5f, -10.0f), 1.0f, 1.0f, 3.0f);
 
-static void Reshape(int width = 800, int height = 600)
+static void Reshape(int width, int height)
 {
-	const float ar = (float)width / (float)height;
-	static int a = 1;
+	if (height <= 0)
+		height = 1;
+
+	const int aspectratio = width / height;
 
 	glViewport(0, 0, width, height);
+
 	glMatrixMode(GL_PROJECTION);
+
 	glLoadIdentity();
-	glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
-	//glFrustum(-ar, ar, 0.0, 1.0, 0 + a, -1 + a++);
+
+	gluPerspective(60.0f, aspectratio, 0.1f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
+
 	glLoadIdentity();
 }
 
@@ -33,7 +32,8 @@ static void Display(void)
 
 	sphere->draw();
 	triangle->draw();
-	
+	cube->draw();
+
 	// TODO make a rectangular class
 	Vector way11(-1.0f, 0, 0), way12(0, 0, -1.0f); // yolun sol çizgisi
 	Vector way21(1.0f, 0, 0), way22(0, 0, -1.0f); // yolun sað çizgisi
@@ -113,10 +113,11 @@ int main(int argc, char* argv [])
 	if (glewInit() != GLEW_OK)
 		return EXIT_FAILURE;
 
+	glutReshapeFunc(Reshape);
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(KeyPress);
-	//glutReshapeFunc(Reshape);
-	
+	//glutFullScreen();
+
 	InitEnvironment();
 	glutMainLoop();
 

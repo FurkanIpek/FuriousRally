@@ -2,54 +2,36 @@
 
 Triangle::Triangle() {}
 
-Triangle::Triangle(Vector a, Vector b, Vector c, Color clr) : A(a), B(b), C(c)
-{
-	edge_1 = B.VectorAdd(A.Negative());
-	edge_2 = A.VectorAdd(C.Negative());
-
-	color = clr;
-}
+Triangle::Triangle(Vector a, Vector b, Vector c, Color clr) : A(a), B(b), C(c) { color = clr; }
 
 Triangle::~Triangle() {}
 
 void Triangle::draw()
 {
-	glColor3f(color.getRed(), color.getGreen(), color.getBlue());
+	glPushMatrix();
+	
+	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
 	glBegin(GL_TRIANGLES);
-
-	glVertex3f((GLfloat)A.getX(), (GLfloat)A.getY(), (GLfloat)A.getZ());    // A
-	glVertex3f((GLfloat)B.getX(), (GLfloat)B.getY(), (GLfloat)B.getZ());    // B
-	glVertex3f((GLfloat)C.getX(), (GLfloat)C.getY(), (GLfloat)C.getZ());    // C
-	// piramit
-	//glVertex3f(-1.0f, -0.5f, 0.5f);    // A
-	//glVertex3f(1.0f, -0.5f, 0.5f);    // B
-
-	//glVertex3f(0.0f, 0.5f, 0.5f);    // C
-	//glVertex3f(1.5f, 0.0f, 0.5f);     // D
-	//glVertex3f(2.0f, -1.5f, 0.5f);     // E
-
+		glVertex3f(A.getX(), A.getY(), A.getZ());
+		glVertex3f(B.getX(), B.getY(), B.getZ());
+		glVertex3f(C.getX(), C.getY(), C.getZ());
 	glEnd();
+
+	glPopMatrix();
 }
 
-void Triangle::move(double x, double y, double z)
+void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
-	A.setX(A.getX() + x);
-	B.setX(C.getX() + x);
-	C.setX(C.getX() + x);
+	A.setX(A.getX() + xv);
+	B.setX(B.getX() + xv);
+	C.setX(C.getX() + xv);
 	
-	A.setY(A.getY() + y);
-	B.setY(C.getY() + y);
-	C.setY(C.getY() + y);
+	A.setY(A.getY() + yv);
+	B.setY(B.getY() + yv);
+	C.setY(C.getY() + yv);
 
-	A.setZ(A.getZ() + z);
-	B.setZ(C.getZ() + z);
-	C.setZ(C.getZ() + z);
-}
-
-Vector Triangle::getNormalAtPos(Vector& vect)
-{
-	Vector normal = edge_1.CrossProduct(edge_2).Normalize();
-
-	return normal;
+	A.setZ(A.getZ() + zv);
+	B.setZ(B.getZ() + zv);
+	C.setZ(C.getZ() + zv);
 }

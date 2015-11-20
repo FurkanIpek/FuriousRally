@@ -6,7 +6,6 @@ class Triangle: public Shape {
 
 private:
 	Vector A, B, C;
-	Vector edge_1, edge_2;
 
 public:
 	Triangle();
@@ -14,7 +13,6 @@ public:
 	~Triangle();
 
 	Color getColor() { return color; }
-	void move(double, double, double);
+	void move(GLfloat, GLfloat, GLfloat);
 	void draw();
-	Vector getNormalAtPos(Vector&);
 };
