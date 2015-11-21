@@ -23,15 +23,9 @@ void Triangle::draw()
 
 void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
-	A.setX(A.getX() + xv);
-	B.setX(B.getX() + xv);
-	C.setX(C.getX() + xv);
-	
-	A.setY(A.getY() + yv);
-	B.setY(B.getY() + yv);
-	C.setY(C.getY() + yv);
+	Vector translation_vec(xv, yv, zv);
 
-	A.setZ(A.getZ() + zv);
-	B.setZ(B.getZ() + zv);
-	C.setZ(C.getZ() + zv);
+	A.translate(translation_vec);
+	B.translate(translation_vec);
+	C.translate(translation_vec);
 }

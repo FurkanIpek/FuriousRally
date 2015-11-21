@@ -8,8 +8,6 @@ private:
 	Vector center;
 	double radius;
 
-	const double PI = 3.1415926535897;
-
 public:
 	Sphere();
 	Sphere(Vector, double, Color);

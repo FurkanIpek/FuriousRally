@@ -14,6 +14,7 @@ protected:
 
 public:
 	virtual void draw() = 0;
-	virtual void move() = 0;
+	virtual void move(GLfloat, GLfloat, GLfloat) = 0;
+	virtual void addPart(Shape*) = 0;
 
 };

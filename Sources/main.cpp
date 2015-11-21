@@ -1,9 +1,6 @@
 #include "Utils\includes.h"
 
-Sphere* sphere = new Sphere(Vector(0.5f, 0.05f, 0.0f), 0.5f, Color(0.7f, 0.4f, 0.53f, 0.5f));
-Triangle* triangle = new Triangle(Vector(-0.05f, -0.05f, 0.0f), Vector(0.05f, -0.05f, 0.0f),
-	Vector(0.0f, 0.05f, 0.0f), Color(0.56f, 0.15f, 0.80f, 1.0f));
-Cube* cube = new Cube(Color(0.90f, 0.50f, 0.20f, 0), Vector(0.5f, 0.5f, -10.0f), 1.0f, 1.0f, 3.0f);
+Car car;
 
 static void Reshape(int width, int height)
 {
@@ -23,6 +20,12 @@ static void Reshape(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 
 	glLoadIdentity();
+	// camera is focused on the car from 10.0f coordinates behind
+	Camera::getInstance().setEyePos(Vector(car.center.getX(), car.center.getY(), car.center.getZ() + 10.0f));
+	Camera::getInstance().setCenter(car.center);
+	Camera::getInstance().setTilt(Vector(0.0f, 1.0f, 0.0f));
+	// move function also sets gluLookAt to necessary position
+	Camera::getInstance().move(0.0f, 0.0f, 0.0f);
 }
 
 static void Display(void)
@@ -30,42 +33,60 @@ static void Display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.64, 0.80, 0.50, 1);
 
-	sphere->draw();
-	triangle->draw();
-	cube->draw();
-
-	// TODO make a rectangular class
-	Vector way11(-1.0f, 0, 0), way12(0, 0, -1.0f); // yolun sol çizgisi
-	Vector way21(1.0f, 0, 0), way22(0, 0, -1.0f); // yolun sað çizgisi
-	//glDrawArrays(GL_POLYGON, 0, 4);
+	car.draw();
 	
 	glutSwapBuffers();
 }
 
+static void Idle(void)
+{
+	glutPostRedisplay();
+}
+
 static void KeyPress(unsigned char keyPressed, int x, int y)
 {
+	Vector vec(0, 0, 0);
+
 	if (keyPressed == 'w') {
-		sphere->move(0, 0, -0.1f);
-		triangle->move(0, 0, -0.1f);
+		vec.setZ(-0.1f);
 	}
 	if (keyPressed == 's') {
-		sphere->move(0, 0, 0.1f);
-		triangle->move(0, 0, 0.1f);
+		vec.setZ(0.1f);
 	}
 	if (keyPressed == 'a') {
-		sphere->move(-0.1f, 0, 0);
-		triangle->move(-0.1f, 0, 0);
+		vec.setX(-0.1f);
 	}
 	if (keyPressed == 'd') {
-		sphere->move(0.1f, 0, 0);
-		triangle->move(0.1f, 0, 0);
+		vec.setX(0.1f);
 	}
-	if (keyPressed == 'q')
+	if (keyPressed == 'q') {
+		Camera::getInstance().lookThroughMe(
+			Vector(
+				Camera::getInstance().getEyePos().getX() + Camera::getInstance().getEyePos().getZ(),
+				Camera::getInstance().getEyePos().getY(),
+				Camera::getInstance().getEyePos().getZ()
+				)
+			);
+	}
+	if (keyPressed == 'e') {
+		Camera::getInstance().lookThroughMe(
+			Vector(
+				Camera::getInstance().getEyePos().getX() - Camera::getInstance().getEyePos().getZ(),
+				Camera::getInstance().getEyePos().getY(),
+				Camera::getInstance().getEyePos().getZ()
+				)
+			);
+	}
+	
+	car.move(vec.getX(), vec.getY(), vec.getZ());
+	//Camera::getInstance().move(vec.getX(), vec.getY(), vec.getZ());
+
+	if (keyPressed == 'h')
 		glutExit();
 
 	if (keyPressed == 'p')
-		gluLookAt(0, 1.5f, -0.5f, 0, 0, 0, 0, 1, 0);
-
+		gluLookAt(2.0f, 0.5f, 0.0f, 2.0f, 0.5f, -10.0f, 10.0f, 5.0f, 50.0f);
+	
 	glutPostRedisplay();
 }
 
@@ -113,9 +134,11 @@ int main(int argc, char* argv [])
 	if (glewInit() != GLEW_OK)
 		return EXIT_FAILURE;
 
+	glutIdleFunc(Idle);
 	glutReshapeFunc(Reshape);
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(KeyPress);
+	glutMouseFunc(NULL);
 	//glutFullScreen();
 
 	InitEnvironment();
@@ -123,3 +146,13 @@ int main(int argc, char* argv [])
 
 	return EXIT_SUCCESS;
 }
+
+// TODO create a map using blend & mesh
+// TODO multiple key presses
+// TODO change camera view with mouse movement
+
+// TODO gluLookAt when pressed q || e does not implement desired functionality
+
+// TODO should I use glut?
+
+// HACK learn how to update screen continuously even if there are no user input

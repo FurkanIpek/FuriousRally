@@ -32,7 +32,7 @@ void Sphere::draw()
 
 void Sphere::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
-	center.setX(center.getX() + xv);
-	center.setY(center.getY() + yv);
-	center.setZ(center.getZ() + zv);
+	Vector translation_vec(xv, yv, zv);
+
+	center.translate(translation_vec);
 }

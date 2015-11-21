@@ -12,66 +12,80 @@ Cube::Cube(Color c, Vector v, GLfloat h, GLfloat w, GLfloat d, bool is_bn_bx)
 	width = w;
 	depth = d;
 	is_bounding_box = is_bn_bx;
+
+	points[0] = Vector(top, right, front - depth);
+	points[1] = Vector(top - width, right, front - depth);
+	points[2] = Vector(top - width, right, front);
+	points[3] = Vector(top, right, front);
+	points[4] = Vector(top, right - height, front - depth);
+	points[5] = Vector(top - width, right - height, front - depth);
+	points[6] = Vector(top - width, right - height, front);
+	points[7] = Vector(top, right - height, front);
 }
 
 Cube::~Cube() {}
 
 void Cube::draw()
 {
-	if (is_bounding_box)
-		glColorMask(false, false, false, false);
-	
-	static GLfloat angle = 0;
-
+	static int angle = 0.9f;
 	glPushMatrix();
 
+	if (is_bounding_box)
+		glColorMask(false, false, false, false);
+	glTranslatef(0, 0, 0);
+	glRotatef(angle, 0.0f, 1.0f, 0.0f); // TODO make cube rotate on x & y - does not work right now
+	glRotatef(angle, 1.0f, 0.0f, 0.0f);
+	angle += 0.9f;
 	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-	glTranslatef(top, right, front);
-	glRotatef(angle, 0.5f, 0.5f, 0.0f);
+
 	glBegin(GL_QUADS);
-		glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-		glVertex3f(1.0f, 1.0f, -1.0f);	// Top Right Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, -1.0f);	// Top Left Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, 1.0f);	// Bottom Left Of The Quad (Top)
-		glVertex3f(1.0f, 1.0f, 1.0f);	// Bottom Right Of The Quad (Top)
-		glColor3f(1.0f, 0.5f, 0.0f);	// Color Orange
-		glVertex3f(1.0f, -1.0f, 1.0f);	// Top Right Of The Quad (Bottom)
-		glVertex3f(-1.0f, -1.0f, 1.0f);	// Top Left Of The Quad (Bottom)
-		glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Left Of The Quad (Bottom)
-		glVertex3f(1.0f, -1.0f, -1.0f);	// Bottom Right Of The Quad (Bottom)
-		glColor3f(1.0f, 0.0f, 0.0f);	// Color Red	
-		glVertex3f(1.0f, 1.0f, 1.0f);	// Top Right Of The Quad (Front)
-		glVertex3f(-1.0f, 1.0f, 1.0f);	// Top Left Of The Quad (Front)
-		glVertex3f(-1.0f, -1.0f, 1.0f);	// Bottom Left Of The Quad (Front)
-		glVertex3f(1.0f, -1.0f, 1.0f);	// Bottom Right Of The Quad (Front)
-		glColor3f(1.0f, 1.0f, 0.0f);	// Color Yellow
-		glVertex3f(1.0f, -1.0f, -1.0f);	// Top Right Of The Quad (Back)
-		glVertex3f(-1.0f, -1.0f, -1.0f);	// Top Left Of The Quad (Back)
-		glVertex3f(-1.0f, 1.0f, -1.0f);	// Bottom Left Of The Quad (Back)
-		glVertex3f(1.0f, 1.0f, -1.0f);	// Bottom Right Of The Quad (Back)
-		glColor3f(0.0f, 0.0f, 1.0f);	// Color Blue
-		glVertex3f(-1.0f, 1.0f, 1.0f);	// Top Right Of The Quad (Left)
-		glVertex3f(-1.0f, 1.0f, -1.0f);	// Top Left Of The Quad (Left)
-		glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Left Of The Quad (Left)
-		glVertex3f(-1.0f, -1.0f, 1.0f);	// Bottom Right Of The Quad (Left)
-		glColor3f(1.0f, 0.0f, 1.0f);	// Color Violet
-		glVertex3f(1.0f, 1.0f, -1.0f);	// Top Right Of The Quad (Right)
-		glVertex3f(1.0f, 1.0f, 1.0f);	// Top Left Of The Quad (Right)
-		glVertex3f(1.0f, -1.0f, 1.0f);	// Bottom Left Of The Quad (Right)
-		glVertex3f(1.0f, -1.0f, -1.0f);	// Bottom Right Of The Quad (Right)
+		// TOP
+		glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right top
+		glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left top
+		glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // left bot
+		glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // right bot
+	
+		// BOT
+		glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right top
+		glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left top
+		glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // left bot
+		glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // right bot
+
+		// FRONT
+		glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // right top
+		glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // left top
+		glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // left bot
+		glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // right bot
+
+		// BACK
+		glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right top
+		glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left top
+		glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left bot
+		glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right bot
+		
+		// LEFT
+		glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // right top
+		glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left top
+		glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left bot
+		glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // right bot
+
+		// RIGHT
+		glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right top
+		glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // left top
+		glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // left bot
+		glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right bot
 	glEnd();
 
-	glPopMatrix();
-
-	angle += 0.9f;
-	
 	if (is_bounding_box)
 		glColorMask(true, true, true, true);
+
+	glPopMatrix();
 }
 
 void Cube::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
-	top += xv;
-	right += yv;
-	front += zv;
+	Vector translation_vec(xv, yv, zv);
+
+	for (int i = 0; i < 8; i++)
+		points[i].translate(translation_vec);
 }
