@@ -14,6 +14,9 @@ private:
 
 	Vector points[8];
 
+	GLuint VBO;
+	GLfloat vert_arr[72];
+
 	bool is_bounding_box;
 
 public:
@@ -22,10 +25,9 @@ public:
 	Cube(Color color, Vector trf_pos, GLfloat height, GLfloat width, GLfloat depth, bool is_bounding_box = false);
 	~Cube();
 
-	Color getColor() { return color; }
-	void setColor(Color c) { color = c; }
+	void setColor(Color clr) { color = clr; }
 	void draw();
-	void move(GLfloat, GLfloat, GLfloat);
+	void move(GLfloat xv, GLfloat yv, GLfloat zv);
 
 	Vector getCenter() { return Vector(top - width / 2, right - height / 2, front - depth / 2); }
 };

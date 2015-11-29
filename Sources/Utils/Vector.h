@@ -15,6 +15,8 @@ public:
 	Vector();
 	Vector(GLfloat, GLfloat, GLfloat);
 
+	void operator = (Vector& rhs);
+
 	GLfloat getX();
 	GLfloat getY();
 	GLfloat getZ();

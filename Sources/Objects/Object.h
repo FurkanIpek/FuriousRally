@@ -13,8 +13,9 @@ protected:
 	Cube* bounding_box;
 
 public:
+	void addPart(Shape* part) { parts.push_back(part); }
+
 	virtual void draw() = 0;
-	virtual void move(GLfloat, GLfloat, GLfloat) = 0;
-	virtual void addPart(Shape*) = 0;
+	virtual void move(GLfloat xv, GLfloat yv, GLfloat zv) = 0;
 
 };

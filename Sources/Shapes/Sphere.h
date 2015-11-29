@@ -13,8 +13,7 @@ public:
 	Sphere(Vector, double, Color);
 	~Sphere();
 
-	Color getColor() { return color; }
 	double pos() { return center.getZ(); }
 	void draw();
-	void move(GLfloat, GLfloat, GLfloat);
+	void move(GLfloat xv, GLfloat yv, GLfloat zv);
 };

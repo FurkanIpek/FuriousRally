@@ -8,10 +8,10 @@
 #include <iostream>
 #endif
 
-#include "..\Shapes\Circle.h"
 #include "..\Shapes\Cube.h"
 #include "..\Shapes\Sphere.h"
 #include "..\Shapes\Triangle.h"
+#include "..\Shapes\Cylinder.h"
 
 #include "..\Objects\Car.h"
 

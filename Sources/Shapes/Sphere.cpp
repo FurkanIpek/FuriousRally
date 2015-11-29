@@ -19,13 +19,16 @@ void Sphere::draw()
 
 	glTranslatef(center.getX(), center.getY(), center.getZ());
 
+	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
 	glBegin(GL_LINE_LOOP);
 		GLUquadricObj* quadric = gluNewQuadric();
 		gluQuadricDrawStyle(quadric, GLU_FILL);
-		glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 		gluSphere(quadric, radius, 360, 360);
 		gluDeleteQuadric(quadric);
 	glEnd();
+	
+	//glutSolidSphere(radius, 360, 360);
 
 	glPopMatrix();
 }

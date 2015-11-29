@@ -4,17 +4,16 @@
 
 class Car : public Object {
 private:
-	int speed;
+	int velocity;
 	int acceleration;
 	
 public:
-	Car();
+	Car(Color clr, Vector v, GLfloat h, GLfloat w, GLfloat d);
 	~Car();
 
 	Vector center;
 
-	void move(GLfloat, GLfloat, GLfloat);
+	void move(GLfloat xv, GLfloat yv, GLfloat zv);
 	void draw();
-	void addPart(Shape*);
 
 };

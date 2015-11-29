@@ -9,7 +9,7 @@ Triangle::~Triangle() {}
 void Triangle::draw()
 {
 	glPushMatrix();
-	
+
 	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
 	glBegin(GL_TRIANGLES);

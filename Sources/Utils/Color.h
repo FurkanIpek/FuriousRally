@@ -22,13 +22,13 @@ public:
 
 	static Color getColor(std::string color, GLfloat alpha = 0.5f)
 	{
-		if (color == "god")
-			return Color(1, 1, 1, alpha);
+		if (color == "yellow")
+			return Color(0.98f, 0.98f, 0.0f, alpha);
 
-		if (color == "damn")
+		if (color == "red")
 			return Color(0.56f, 0.25f, 0.80f, alpha);
 
-		if (color == "wtf")
+		if (color == "gray")
 			return Color(0.70f, 0.90f, 0.20f, alpha);
 
 		if (color == "hey")

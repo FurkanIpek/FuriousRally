@@ -7,6 +7,13 @@ Vector::Vector() : x(0), y(0), z(0) {}
 
 Vector::Vector(GLfloat x, GLfloat y, GLfloat z): x(x), y(y), z(z) {}
 
+void Vector::operator =(Vector& rhs)
+{
+	x = rhs.getX();
+	y = rhs.getY();
+	z = rhs.getZ();
+}
+
 GLfloat Vector::getX()
 {
 	return x;
@@ -132,6 +139,11 @@ void Vector::rotateZ(GLfloat alfa)
 // TODO does translation * cur_mat  and then rotation * cur_mat work? Also check the correctness of the following arrangement
 void Vector::rotate(GLfloat x, GLfloat y, GLfloat z)
 {
+	GLfloat temp_x = x,
+		temp_y = y,
+		temp_z = z;
+
+	// cismi orijine taþý
 	if (x != 0.0f)
 		rotateX(x);
 
