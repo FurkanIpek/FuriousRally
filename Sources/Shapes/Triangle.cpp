@@ -8,11 +8,13 @@ Triangle::~Triangle() {}
 
 void Triangle::draw()
 {
+	Vector normal = getNormal();
 	glPushMatrix();
 
 	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
 	glBegin(GL_TRIANGLES);
+		glNormal3f(normal.getX(), normal.getY(), normal.getZ());
 		glVertex3f(A.getX(), A.getY(), A.getZ());
 		glVertex3f(B.getX(), B.getY(), B.getZ());
 		glVertex3f(C.getX(), C.getY(), C.getZ());
@@ -29,3 +31,14 @@ void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
 	B.translate(translation_vec);
 	C.translate(translation_vec);
 }
+
+Vector Triangle::getNormal()
+{
+	Vector edge_1 = B.vectorAdd(A.negative());
+	Vector edge_2 = A.vectorAdd(C.negative());
+	Vector normal = edge_1.crossProduct(edge_2).normalize();
+
+	return normal;
+}
+
+void Triangle::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}

@@ -36,6 +36,9 @@ public:
 
 	void lookThroughMe()
 	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
 		gluLookAt(eye.getX(), eye.getY(), eye.getZ(),
 			center.getX(), center.getY(), center.getZ(),
 			tilt.getX(), tilt.getY(), tilt.getZ());
@@ -43,6 +46,9 @@ public:
 
 	void lookThroughMe(Vector eye_pos)
 	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
 		gluLookAt(eye_pos.getX(), eye_pos.getY(), eye_pos.getZ(),
 			center.getX(), center.getY(), center.getZ(),
 			tilt.getX(), tilt.getY(), tilt.getZ());

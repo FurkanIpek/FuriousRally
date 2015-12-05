@@ -13,16 +13,11 @@ class Shape {
 protected:
 	Color color;
 
-	Vector translation_vec;
-	Vector rotation_vec;
-	Vector scaling_vec;
-
-	bool translate;
-
 public:
 	Color getColor() { return color; }
 	void setColor(Color clr) { color = clr; }
 
 	virtual void draw() = 0;
 	virtual void move(GLfloat xv, GLfloat yv, GLfloat zv) = 0;
+	virtual void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) = 0;
 };

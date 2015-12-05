@@ -2,33 +2,27 @@
 
 Cylinder::Cylinder() {}
 
-Cylinder::Cylinder(Color clr, GLfloat r, GLfloat l) : r(r), l(l) { color = clr; }
+Cylinder::Cylinder(Color clr, Vector coor, GLfloat radius, GLfloat h, bool exhaust) 
+	: coordinates(coor), radius(radius), height(h), exhaust(exhaust) { color = clr; }
 
 Cylinder::~Cylinder() {}
 
 void Cylinder::draw()
 {
-	float x, y, z; 
-
-	glBegin(GL_QUAD_STRIP);
-
-	glColor3f(153.0f / 256.0f, 204.0f / 256.0f, 0.98f);
-
-	for (int d = 0; d <= 362; d++)
-	{
-		x = r*cos(cn*d);
-		z = r*sin(cn*d);
-		y = 0;
-		glVertex3f(x, y, z);
-
-		y = l;
-		glVertex3f(x, y, z);
-	}
-
-	glEnd();
+	glPushMatrix();
+	glColor3f(color.getRed(), color.getGreen(), color.getBlue());
+	glTranslatef(coordinates.getX(), coordinates.getY(), coordinates.getZ());
+	if (!exhaust)
+		glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	glutSolidCylinder(radius, height, 360, 360);
+	glPopMatrix();
 }
 
 void Cylinder::move(GLfloat xv, GLfloat yv, GLfloat zv)
 {
+	Vector translation_vec(xv, yv, zv);
 
+	coordinates.translate(translation_vec);
 }
+
+void Cylinder::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}

@@ -24,8 +24,16 @@ public:
 	void setY(GLfloat);
 	void setZ(GLfloat);
 
-	void translate(Vector);
-	void rotate(GLfloat x, GLfloat y, GLfloat z);
-	void scale(Vector);
+	GLfloat magnitude();
+	Vector normalize();
+	Vector negative();
+	GLfloat dotProduct(Vector&);
+	Vector crossProduct(Vector&);
+	Vector vectorAdd(Vector&);
+	Vector vectorMult(GLfloat);
+
+	void translate(Vector translation_vector);
+	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+	void scale(Vector scaling_vector);
 
 };

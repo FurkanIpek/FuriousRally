@@ -2,6 +2,8 @@
 
 #include <string>
 
+typedef enum {YELLOW, RED, GRAY, WHITE, BLACK, PURPLE, BLUE, GREEN} COLORS;
+
 class Color {
 private:
 	double red, green, blue;
@@ -20,20 +22,47 @@ public:
 	void setBlue(int blueValue) { blue = blueValue; }
 	void setAlpha(double alphaValue) { alpha = alphaValue; }
 
-	static Color getColor(std::string color, GLfloat alpha = 0.5f)
+	void operator = (Color& rhs)
 	{
-		if (color == "yellow")
-			return Color(0.98f, 0.98f, 0.0f, alpha);
+		red = rhs.getRed();
+		green = rhs.getGreen();
+		blue = rhs.getBlue();
+		alpha = rhs.getAlpha();
+	}
 
-		if (color == "red")
-			return Color(0.56f, 0.25f, 0.80f, alpha);
+	static Color getColor(COLORS color_code, GLfloat alpha = 1.0f)
+	{
+		Color color;
 
-		if (color == "gray")
-			return Color(0.70f, 0.90f, 0.20f, alpha);
+		switch (color_code)
+		{
+		case YELLOW: color = Color(0.98f, 0.98f, 0.0f, alpha);
+			break;
 
-		if (color == "hey")
-			return Color(0.20f, 0.30f, 0.50f, alpha);
+		case RED: color = Color(0.70f, 0.10f, 0.10f, alpha);
+			break;
 
-		return Color(0, 0, 0, alpha);
+		case GRAY: color = Color(0.62f, 0.62f, 0.62f, alpha);
+			break;
+
+		case WHITE: color = Color(0.98f, 0.98f, 0.98f, alpha);
+			break;
+
+		case BLACK: color = Color(0.0f, 0.0f, 0.0f, alpha);
+			break;
+
+		case PURPLE: color = Color(0.39f, 0.0f, 0.78f, alpha);
+			break;
+
+		case BLUE: color = Color(0.0f, 0.39f, 0.78f, alpha);
+			break;
+
+		case GREEN: color = Color(0.49f, 0.98f, 0.0f, alpha);
+			break;
+
+		default: color = Color(0.70f, 0.65f, 0.50f, alpha);
+		}
+
+		return color;
 	}
 };

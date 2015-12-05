@@ -4,6 +4,8 @@
 #include "GL\glew.h"
 #include "GL\freeglut.h"
 
+#include <ctype.h> // for tolower
+
 #ifdef _DEBUG
 #include <iostream>
 #endif
@@ -18,3 +20,4 @@
 #include "Camera.h"
 #include "Color.h"
 #include "Vector.h"
+#include "Constants.h"

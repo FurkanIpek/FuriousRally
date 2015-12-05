@@ -16,20 +16,9 @@ Sphere::~Sphere() {}
 void Sphere::draw()
 {
 	glPushMatrix();
-
-	glTranslatef(center.getX(), center.getY(), center.getZ());
-
 	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
-	glBegin(GL_LINE_LOOP);
-		GLUquadricObj* quadric = gluNewQuadric();
-		gluQuadricDrawStyle(quadric, GLU_FILL);
-		gluSphere(quadric, radius, 360, 360);
-		gluDeleteQuadric(quadric);
-	glEnd();
-	
-	//glutSolidSphere(radius, 360, 360);
-
+	glTranslatef(center.getX(), center.getY(), center.getZ());	
+	glutSolidSphere(radius, 360, 360);
 	glPopMatrix();
 }
 
@@ -39,3 +28,5 @@ void Sphere::move(GLfloat xv, GLfloat yv, GLfloat zv)
 
 	center.translate(translation_vec);
 }
+
+void Sphere::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}

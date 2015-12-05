@@ -1,7 +1,7 @@
 #include "Vector.h"
 #include <math.h>
 
-const static double PI = 3.1415926535897;
+const static GLfloat PI = 3.1415926535897;
 
 Vector::Vector() : x(0), y(0), z(0) {}
 
@@ -42,6 +42,44 @@ void Vector::setY(GLfloat v)
 void Vector::setZ(GLfloat v)
 {
 	z = v;
+}
+
+GLfloat Vector::magnitude()
+{
+	return (GLfloat)sqrt(x*x + y*y + z*z);
+}
+
+Vector Vector::normalize()
+{
+	GLfloat magnitude = this->magnitude();
+
+	return Vector(x / magnitude, y / magnitude, z / magnitude);
+}
+
+Vector Vector::negative()
+{
+	return Vector(-x, -y, -z);
+}
+
+GLfloat Vector::dotProduct(Vector& vect)
+{
+	return getX()*vect.getX() + getY()*vect.getY() + getZ()*vect.getZ();
+}
+
+Vector Vector::crossProduct(Vector& vect)
+{
+	return Vector(getY()*vect.getZ() - getZ()*vect.getY(),
+		getZ()*vect.getX() - getX()*vect.getZ(), getX()*vect.getY() - getY()*vect.getX());
+}
+
+Vector Vector::vectorAdd(Vector& vect)
+{
+	return Vector(getX() + vect.getX(), getY() + vect.getY(), getZ() + vect.getZ());
+}
+
+Vector Vector::vectorMult(GLfloat scalar)
+{
+	return Vector(getX()*scalar, getY()*scalar, getZ()*scalar);
 }
 
 void Vector::translate(Vector vec)
@@ -136,22 +174,22 @@ void Vector::rotateZ(GLfloat alfa)
 	y = result[1];
 	z = result[2];
 }
-// TODO does translation * cur_mat  and then rotation * cur_mat work? Also check the correctness of the following arrangement
-void Vector::rotate(GLfloat x, GLfloat y, GLfloat z)
+
+void Vector::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
 	GLfloat temp_x = x,
 		temp_y = y,
 		temp_z = z;
 
-	// cismi orijine taþý
+	// TODO move the object to the origin before rotation
 	if (x != 0.0f)
-		rotateX(x);
+		rotateX(angle);
 
 	if (y != 0.0f)
-		rotateY(y);
+		rotateY(angle);
 
 	if (z != 0.0f)
-		rotateZ(z);
+		rotateZ(angle);
 }
 
 void Vector::scale(Vector vec)

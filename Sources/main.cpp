@@ -1,18 +1,17 @@
 #include "Utils\includes.h"
 
-#define far_plane 1000.0f
-#define sun_height 200.0f
-#define sun_x 70.0f
-
 Car* car;
-Cylinder sky_box(Color(0.62f, 0.62f, 0.62f, 1.0f), far_plane, far_plane);
-Sphere sun(Vector(sun_x, sun_height, -far_plane), 50.0f, Color::getColor("yellow"));
+Car* car_2;
+Sphere sun(Vector(sun_x, sun_height, -far_plane), 50.0f, Color::getColor(YELLOW));
 Camera scene_cam;
+Cube kup(Color(0.39f, 0.0f, 0.19f, 1.0f), Vector(0.0f, 0.5f, -11.0f), 1.0f, 1.0f, 2.0f);
+
+bool keys[256] = { false };
 
 void setCameraPos()
 {
-	scene_cam.setEyePos(Vector(car->center.getX(), car->center.getY() + 2.0f, car->center.getZ() + 7.0f));
-	scene_cam.setCenter(car->center);
+	scene_cam.setEyePos(Vector(car->getCenter().getX(), car->getCenter().getY() + 2.0f, car->getCenter().getZ() + 7.0f));
+	scene_cam.setCenter(car->getCenter());
 	scene_cam.setTilt(Vector(0.0f, 1.0f, 0.0f));
 
 	scene_cam.move(0.0f, 0.0f, 0.0f);
@@ -33,29 +32,62 @@ static void Reshape(int width, int height)
 
 	gluPerspective(65.0f, aspectratio, 0.1f, far_plane);
 
-	glMatrixMode(GL_MODELVIEW);
-
-	glLoadIdentity();
-
 	setCameraPos();
 }
 
 void track()
 {
-	static GLfloat x1 = -1.5f, x2 = 1.5f, y = 0.0f, z;
-	GLfloat amount = -0.5f, increment = 0.1f;
-	int ctr;
+	GLfloat x1 = -1.80f, x2 = 1.80f, y = 0.0f, z;
+	GLfloat amount = -1.0f;
 
 	glBegin(GL_QUAD_STRIP);
-	glColor4f(0.75f, 0.75f, 0.75f, 1.0f);
-	for (z = 0.0f, ctr= 0; z > -far_plane; z += amount, ctr++)
+	glColor4f(0.75f, 0.75f, 0.75f, 0.5f);
+	for (z = 0.0f; z > -far_plane; z += amount)
 	{
+		glNormal3f(0.0f, 1.0f, 0.0f);
 		glVertex3f(x1, y, z);
 		glVertex3f(x1, y, z + amount);
-
 		glVertex3f(x2, y, z);
 		glVertex3f(x2, y, z + amount);
 	}
+	glEnd();
+
+	x1 = -0.1f, x2 = 0.1f, y = 0.01f;
+
+	glBegin(GL_QUADS);
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+	for (z = 0.0f; z > -far_plane; z += amount)
+	{
+		if ((int)z % 2 != 0)
+			continue;
+
+		glVertex3f(x1, y, z);
+		glVertex3f(x1, y, z + amount);
+		glVertex3f(x2, y, z);
+		glVertex3f(x2, y, z + amount);
+	}
+	glEnd();
+}
+
+void sky(GLfloat r, GLfloat l)
+{
+	float x, y, z;
+
+	glBegin(GL_QUAD_STRIP);
+
+	glColor3f(0.59f, 0.79f, 0.98f);
+
+	for (int d = 0; d <= 365; d++)
+	{
+		x = r*cos(cn*d);
+		z = r*sin(cn*d);
+		y = 0;
+		glVertex3f(x, y, z);
+
+		y = l;
+		glVertex3f(x, y, z);
+	}
+
 	glEnd();
 }
 
@@ -65,71 +97,80 @@ static void Display(void)
 	glClearColor(0.64, 0.80, 0.50, 1);
 
 	car->draw();
+	car_2->draw();
+	//kup.draw();
 
-	sky_box.draw();
+	sky(far_plane, far_plane);
 	sun.draw();
 	track();
 
 	glutSwapBuffers();
 }
 
-static void Idle(void)
-{
-	Display();
-}
-
-static void KeyPress(unsigned char keyPressed, int x, int y)
+static void keyHandler()
 {
 	Vector vec(0, 0, 0);
-	GLfloat magnitude = 0.1f;
+	GLfloat magnitude = 0.05f;
 
-	if (keyPressed == 'w') {
+	if (keys[(int)'w']) {
 		vec.setZ(-magnitude);
+		kup.rotate(20.0f, 1.0f, 1.0f, 0.0f);
 	}
-	if (keyPressed == 's') {
+	if (keys[(int)'s']) {
 		vec.setZ(magnitude);
 	}
-	if (keyPressed == 'a') {
+	if (keys[(int)'a']) {
 		vec.setX(-magnitude);
 	}
-	if (keyPressed == 'd') {
+	if (keys[(int)'d']) {
 		vec.setX(magnitude);
 	}
-	if (keyPressed == 'q') {
+	//if (car->getVelocity() >= 0.0f && keys[(int)'w'] == true)
+	{
+		car->move(vec.getX(), vec.getY(), vec.getZ());
+		setCameraPos();
+	}
+
+	if (keys[(int)'h'])
+		glutExit();
+
+	if (keys[(int)'q']) {
 		scene_cam.lookThroughMe(
 			Vector(
-				scene_cam.getEyePos().getX() + scene_cam.getEyePos().getZ(),
+				scene_cam.getEyePos().getX() - 5.0f,
 				scene_cam.getEyePos().getY(),
 				scene_cam.getEyePos().getZ() - 7.0f
 				)
 			);
 	}
-	if (keyPressed == 'e') {
+	if (keys[(int)'e']) {
 		scene_cam.lookThroughMe(
 			Vector(
-				scene_cam.getEyePos().getX() - scene_cam.getEyePos().getZ(),
+				scene_cam.getEyePos().getX() + 5.0f,
 				scene_cam.getEyePos().getY(),
-				scene_cam.getEyePos().getZ() + 7.0f
+				scene_cam.getEyePos().getZ() - 7.0f
 				)
 			);
 	}
-
-	car->move(vec.getX(), vec.getY(), vec.getZ());
-
-	if (keyPressed == 'h')
-		glutExit();
-	
-	glutPostRedisplay();
 }
 
-static void MouseFunc(int button, int state, int x, int y)
+static void KeyRelease(unsigned char keyPressed, int x, int y)
 {
+	keyPressed = tolower(keyPressed);
 
+	keys[(int)keyPressed] = false;
 }
 
-static void MotionFunc(int x, int y)
+static void KeyPress(unsigned char keyPressed, int x, int y)
 {
+	keyPressed = tolower(keyPressed);
+	keys[(int)keyPressed] = true;
+}
 
+static void Idle(void)
+{
+	keyHandler();
+	Display();
 }
 
 void InitEnvironment()
@@ -137,15 +178,15 @@ void InitEnvironment()
 	GLfloat light_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat light_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat light_position[] = { sun_x, sun_height, -far_plane, 0.5f };
+	GLfloat light_position[] = { sun_x, sun_height, -far_plane, 0.0f };
 
 	GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	GLfloat mat_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat high_shininess[] = { 100.0f };
-
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	// TODO wtf this does
+	/*glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);*/
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -180,11 +221,11 @@ int main(int argc, char* argv [])
 	glutReshapeFunc(Reshape);
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(KeyPress);
-	glutMouseFunc(MouseFunc); // handles mouse strokes
-	glutMotionFunc(MotionFunc); // handles mouse motions when one or more mouse button is pressed - use this for changing camera view
+	glutKeyboardUpFunc(KeyRelease);
 	//glutFullScreen();
-
-	car = new Car(Color(0.39f, 0.0f, 0.19f, 1.0f), Vector(0.5f, 1.0f, -10.0f), 1.0f, 1.0f, 2.0f);
+	
+	car = new Car(Color(0.39f, 0.0f, 0.19f, 1.0f), Vector(0.0f, 1.5f, -11.0f), 1.0f, 1.0f, 2.0f);
+	car_2 = new Car(Color(0.39f, 0.5f, 0.19f, 1.0f), Vector(0.0f, 1.5f, -30.0f), 1.0f, 1.0f, 2.0f);
 
 	InitEnvironment();
 	glutMainLoop();
@@ -192,9 +233,8 @@ int main(int argc, char* argv [])
 	return EXIT_SUCCESS;
 }
 
-// TODO multiple key presses
-// TODO change camera view with mouse movement
-// TODO gluLookAt when pressed q || e does not implement desired functionality
-
 // TODO use bezier curves for drawing track/road
-// TODO draw sky_box using Cylinder class, not the function
+
+// TODO scene graphs
+// TODO add normals
+// TODO robot arm örneðine bak

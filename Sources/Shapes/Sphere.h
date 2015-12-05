@@ -16,4 +16,5 @@ public:
 	double pos() { return center.getZ(); }
 	void draw();
 	void move(GLfloat xv, GLfloat yv, GLfloat zv);
+	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 };

@@ -2,18 +2,24 @@
 
 #include "Object.h"
 
+#include "..\Shapes\Sphere.h"
+#include "..\Shapes\Cylinder.h"
+#include "..\Shapes\Triangle.h"
+
 class Car : public Object {
 private:
-	int velocity;
-	int acceleration;
+	GLfloat velocity;
+	GLfloat acceleration;
+	Triangle* triangle;
+	Vector center;
 	
 public:
-	Car(Color clr, Vector v, GLfloat h, GLfloat w, GLfloat d);
+	Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d);
 	~Car();
-
-	Vector center;
 
 	void move(GLfloat xv, GLfloat yv, GLfloat zv);
 	void draw();
+	GLfloat getVelocity() { return velocity; }
+	Vector getCenter() { return center; }
 
 };

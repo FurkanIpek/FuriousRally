@@ -14,4 +14,7 @@ public:
 
 	void move(GLfloat, GLfloat, GLfloat);
 	void draw();
+	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+
+	Vector getNormal();
 };
