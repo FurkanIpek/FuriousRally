@@ -19,12 +19,15 @@ private:
 
 	bool is_bounding_box;
 
-	Vector getNormal(Vector A, Vector B, Vector C);
+	bool texture_map;
+	GLuint textures [6];
+
+	void drawSky();
 
 public:
 	Cube();
 	// Vector trf_pos is the top-right-front point of the cube
-	Cube(Color color, Vector center, GLfloat height, GLfloat width, GLfloat depth, bool is_bounding_box = false);
+	Cube(Color color, Vector center, GLfloat height, GLfloat width, GLfloat depth, bool is_bounding_box = false, bool text_map = false);
 	~Cube();
 
 	void setColor(Color clr) { color = clr; }

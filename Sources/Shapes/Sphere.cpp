@@ -29,4 +29,7 @@ void Sphere::move(GLfloat xv, GLfloat yv, GLfloat zv)
 	center.translate(translation_vec);
 }
 
-void Sphere::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}
+void Sphere::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+{
+	center.rotate(angle, x, y, z);
+}

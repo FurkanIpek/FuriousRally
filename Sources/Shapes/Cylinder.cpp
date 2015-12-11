@@ -25,4 +25,7 @@ void Cylinder::move(GLfloat xv, GLfloat yv, GLfloat zv)
 	coordinates.translate(translation_vec);
 }
 
-void Cylinder::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}
+void Cylinder::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+{
+	coordinates.rotate(angle, x, y, z);
+}

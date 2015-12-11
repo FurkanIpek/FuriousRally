@@ -15,9 +15,11 @@
 #include "..\Shapes\Triangle.h"
 #include "..\Shapes\Cylinder.h"
 
+#include "..\Objects\Object.h"
 #include "..\Objects\Car.h"
 
 #include "Camera.h"
 #include "Color.h"
 #include "Vector.h"
 #include "Constants.h"
+#include "Scene.h"

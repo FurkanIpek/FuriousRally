@@ -16,6 +16,6 @@ public:
 	void addPart(Shape* part) { parts.push_back(part); }
 
 	virtual void draw() = 0;
-	virtual void move(GLfloat xv, GLfloat yv, GLfloat zv) = 0;
+	virtual void move() = 0;
 
 };

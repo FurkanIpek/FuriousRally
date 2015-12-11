@@ -23,15 +23,6 @@ void Triangle::draw()
 	glPopMatrix();
 }
 
-void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
-{
-	Vector translation_vec(xv, yv, zv);
-
-	A.translate(translation_vec);
-	B.translate(translation_vec);
-	C.translate(translation_vec);
-}
-
 Vector Triangle::getNormal()
 {
 	Vector edge_1 = B.vectorAdd(A.negative());
@@ -41,4 +32,18 @@ Vector Triangle::getNormal()
 	return normal;
 }
 
-void Triangle::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {}
+void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
+{
+	Vector translation_vec(xv, yv, zv);
+
+	A.translate(translation_vec);
+	B.translate(translation_vec);
+	C.translate(translation_vec);
+}
+
+void Triangle::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+{
+	A.rotate(angle, x, y, z);
+	B.rotate(angle, x, y, z);
+	C.rotate(angle, x, y, z);
+}
