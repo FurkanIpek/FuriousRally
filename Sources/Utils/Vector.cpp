@@ -177,11 +177,6 @@ void Vector::rotateZ(GLfloat alfa)
 
 void Vector::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
-	GLfloat temp_x = x,
-		temp_y = y,
-		temp_z = z;
-
-	// TODO move the object to the origin before rotation
 	if (x != 0.0f)
 		rotateX(angle);
 

@@ -31,26 +31,8 @@ public:
 	void setKey(unsigned char key, bool condition) { keys[(int)key] = condition; }
 	bool getKey(int pos) { return keys[pos]; }
 	void keyHandler();
-
-	void draw() 
-	{ 
-		car->draw();
-		
-		for (auto car : AIcars)
-			car->draw();
-
-		for (auto obj : objects)
-			obj->draw();
-
-		ground();
-	}
-
-	void setCameraPos()
-	{
-		scene_cam.setEyePos(Vector(car->getCenter().getX(), car->getCenter().getY() + 2.0f, car->getCenter().getZ() + 7.0f));
-		scene_cam.setCenter(car->getCenter());
-		scene_cam.setTilt(Vector(0.0f, 1.0f, 0.0f));
-
-		scene_cam.move(0.0f, 0.0f, 0.0f);
-	}
+	void move();
+	void moveAIcars();
+	void draw();
+	void setCameraPos();
 };

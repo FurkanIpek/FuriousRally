@@ -6,7 +6,7 @@
 #include "..\Shapes\Cylinder.h"
 #include "..\Shapes\Triangle.h"
 
-enum TURN {left, straight, right};
+enum TURN {left, right};
 
 class Car : public Object {
 private:

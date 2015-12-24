@@ -12,8 +12,8 @@ public:
 	Triangle(Vector a, Vector b, Vector c, Color color);
 	~Triangle();
 
-	void move(GLfloat, GLfloat, GLfloat);
 	void draw();
+	void translate(Vector translation_vec);
 	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 
 	Vector getNormal();

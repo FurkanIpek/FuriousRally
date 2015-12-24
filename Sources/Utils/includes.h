@@ -7,7 +7,7 @@
 #include <ctype.h> // for tolower
 
 #ifdef _DEBUG
-#include <iostream>
+#include <cstdio>
 #endif
 
 #include "..\Shapes\Cube.h"

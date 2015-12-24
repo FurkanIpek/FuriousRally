@@ -32,10 +32,8 @@ Vector Triangle::getNormal()
 	return normal;
 }
 
-void Triangle::move(GLfloat xv, GLfloat yv, GLfloat zv)
+void Triangle::translate(Vector translation_vec)
 {
-	Vector translation_vec(xv, yv, zv);
-
 	A.translate(translation_vec);
 	B.translate(translation_vec);
 	C.translate(translation_vec);

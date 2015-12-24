@@ -15,13 +15,12 @@ void Cylinder::draw()
 	if (!exhaust)
 		glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 	glutSolidCylinder(radius, height, 360, 360);
+	
 	glPopMatrix();
 }
 
-void Cylinder::move(GLfloat xv, GLfloat yv, GLfloat zv)
+void Cylinder::translate(Vector translation_vec)
 {
-	Vector translation_vec(xv, yv, zv);
-
 	coordinates.translate(translation_vec);
 }
 
