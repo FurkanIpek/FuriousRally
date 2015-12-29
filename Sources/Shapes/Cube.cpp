@@ -87,6 +87,8 @@ void Cube::translate(Vector translation_vec)
 {
 	for (int i = 0; i < 8; i++)
 		points[i].translate(translation_vec);
+
+	center.translate(translation_vec);
 }
 
 void Cube::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
@@ -97,4 +99,6 @@ void Cube::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 	// top and bot will always have the same normal
 	for (int i = 2; i < 6; i++)
 		normals[i].rotate(angle, x, y, z);
+
+	center.rotate(angle, x, y, z);
 }

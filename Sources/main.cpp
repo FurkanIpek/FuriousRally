@@ -21,7 +21,7 @@ static void Reshape(int width, int height)
 static void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.64, 0.80, 0.50, 1.0f);
+	glClearColor(0.59f, 0.79f, 0.98f, 1.0f);
 
 	Scene::getInstance().draw();
 
@@ -46,43 +46,6 @@ static void Idle(void)
 	Display();
 }
 
-void InitEnvironment()
-{
-	GLfloat light_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	GLfloat light_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat light_position[] = { sun_x, sun_height, far_plane, 1.0f };
-
-	GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	GLfloat mat_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-	GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat high_shininess[] = { 50.0f };
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-	glEnable(GL_POLYGON_SMOOTH);
-
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND_SRC);
-	
-	glEnable(GL_LIGHT0);
-	glEnable(GL_NORMALIZE);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHTING);
-	
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-}
-
 int main(int argc, char* argv [])
 {	
 	glutInit(&argc, argv);
@@ -100,7 +63,6 @@ int main(int argc, char* argv [])
 	glutKeyboardUpFunc(KeyRelease);
 	//glutFullScreen();
 	
-	InitEnvironment();
 	glutMainLoop();
 
 	return EXIT_SUCCESS;
@@ -108,8 +70,7 @@ int main(int argc, char* argv [])
 // TODO back face culling
 // TODO Curves slaytı, sayfa 140, bezier curves
 // TODO antialiasing in RasterDisplay slayt - look into it
-// TODO use bezier curves for drawing track/road
-// TODO AI car movement
-// TODO collision detection
 // TODO exhaust smoke
 // TODO camera should move around with mouse when "move around with mouse" mode is on
+
+// TODO camera arabayla beraber rotate etmeli

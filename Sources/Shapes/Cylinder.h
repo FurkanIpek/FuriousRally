@@ -5,8 +5,10 @@
 class Cylinder : public Shape {
 private:
 	GLfloat radius, height;
+	GLfloat angle, x, y, z;
 	Vector coordinates;
 	bool exhaust;
+	bool rotated;
 
 public:
 	Cylinder();

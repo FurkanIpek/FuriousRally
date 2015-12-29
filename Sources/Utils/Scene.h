@@ -5,9 +5,11 @@ class Scene {
 private:
 	Car* car;
 	Camera scene_cam;
-	Car* car_2;
 	Sphere* sun;
 	Cube* skyCube;
+	Cube* treasureBox;
+
+	GLfloat x1 = -1.00f, x2 = 100.0f, x3 = -1.0f;
 
 	std::vector<Car*> AIcars;
 	std::vector<Shape*> objects;
@@ -16,6 +18,11 @@ private:
 
 	Scene();
 	void ground();
+	GLfloat getBezierPoint(GLfloat zet);
+	void outOfRoadCheck(Car*);
+	void createTreasureBox();
+	void prizeCheck();
+	void portForward(Car* vehicle);
 
 	Scene(Scene const&);              // Don't Implement
 	void operator=(Scene const&);	  // Don't implement

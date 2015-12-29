@@ -1,13 +1,14 @@
 #include "Car.h"
-
-#define acc 0.005f
+#include "..\Utils\Constants.h"
 
 Car::Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d) : center(center)
 {
 	velocity = 0.0f;
 	acceleration = 0.0f;
 	direction.setX(0), direction.setY(0), direction.setZ(-1);
+	speedLimit = 0.80f;
 	deccelerating = false;
+	state = maxTurn / 2;
 	
 	bounding_box = new Cube(clr, center, h + 0.5f, w, d, true);
 
@@ -26,9 +27,9 @@ Car::Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d) : center(cen
 	cylinder[4] = new Cylinder(Color::getColor(GRAY), Vector(center.getX() - w/3, center.getY() - h/2, center.getZ() + d/2), h/10, d/20, true); // exhaust
 
 	parts.push_back(cube);
+	parts.push_back(bounding_box);
 	parts.push_back(sphere);
 	parts.push_back(triangle);
-	parts.push_back(bounding_box);
 
 	for (int i = 0; i < 5; i++)
 		parts.push_back(cylinder[i]);
@@ -76,8 +77,11 @@ void Car::draw()
 
 	velocity += acceleration;
 
-	if (velocity >= 0.80f)
-		velocity = 0.80f;
+	if (velocity >= speedLimit)
+		velocity = speedLimit;
+
+	if (velocity < -speedLimit / 10)
+		velocity = -speedLimit / 10;
 	
 	for (auto part : parts)
 		part->draw();
@@ -96,10 +100,13 @@ void Car::decelerate(bool anchors)
 	if (anchors)
 	{
 		deccelerating = true;
-		acceleration = -5*acc;
+		if (velocity > 0)
+			acceleration = -5 * acc;
+		else
+			acceleration = -acc;
 	}
-	// bizde geri vites yok :D
-	if (velocity <= 0.0f)
+	
+	if (velocity <= 0.0f && !deccelerating)
 	{
 		acceleration = 0.0f;
 		velocity = 0.0f;
@@ -108,32 +115,114 @@ void Car::decelerate(bool anchors)
 
 void Car::turn(TURN side)
 {
-	// 0 -> 2x left, 1 -> left, 2 -> straight, 3 -> right, 4 -> 2x right
-	static int state = 2;
-	static GLfloat angle = 3.5f;
-
 	if (velocity == 0.0f) return;
+	GLfloat ang;
 
 	if (side == left)
 	{
 		if (state >= 1) state--;
 		else return;
 		// positive angle
-		angle = abs(angle);
+		ang = turnAngle;
 	}
 	else
 	{
-		if (state <= 3) state++;
+		if (state <= maxTurn) state++;
 		else return;
 		// negative angle
-		angle = -abs(angle);
+		ang = -turnAngle;
 	}
 
-	for (auto part : parts)
+	for (int i = 0; i < parts.size(); i++)//(auto part : parts)
 	{
-		part->translate(center.negative());
-		part->rotate(angle, 0.0f, 1.0f, 0.0f);
-		part->translate(center);
+		//if (i == 4 || i == 5) ang *= 1.25f;
+		parts[i]->translate(center.negative());
+		parts[i]->rotate(ang, 0.0f, 1.0f, 0.0f);
+		parts[i]->translate(center);
+		//if (i == 4 || i == 5) ang /= 1.25f;
 	}
-	direction.rotate(angle, 0.0f, 1.0f, 0.0f);
+	direction.rotate(ang, 0.0f, 1.0f, 0.0f);
+}
+
+void Car::straighten()
+{
+	int dif = state - maxTurn / 2;
+
+	if (dif > 0)
+		while (dif-- != 0)
+			turn(left);
+	else if (dif < 0)
+		while (dif++ != 0)
+			turn(right);
+}
+
+void Car::checkCollision(Car* other)
+{
+	Cube* bnd_bx = other->getBoundingBox();
+	Vector otherCtr = bnd_bx->getCenter(), center = this->bounding_box->getCenter();
+
+	GLfloat zd = abs(otherCtr.getZ() - center.getZ()),
+		yd = abs(otherCtr.getY() - center.getY()),
+		xd = abs(otherCtr.getX() - center.getX());
+
+	bool z = 0, y = 0, x = 0;
+
+	if (zd < (bnd_bx->getDepth() / 2 + this->bounding_box->getDepth() / 2)) z = true;
+
+	if (yd < (bnd_bx->getHeight() / 2 + this->bounding_box->getHeight() / 2)) y = true;
+
+	if (xd < (bnd_bx->getWidth() / 2 + this->bounding_box->getWidth() / 2)) x = true;
+
+	if (x && y && z) // if there is a collision
+	{
+		if (z && zd < bnd_bx->getDepth() / 4) // side to side crash
+		{
+			this->setVelocity(this->getVelocity() - 0.1f);
+			other->setVelocity(other->getVelocity() - 0.1f);
+
+			if (other->getCenter().getX() < this->getCenter().getX()) // other car is at the right
+			{
+				other->turn(right);
+				this->turn(left);
+			}
+			else
+			{
+				other->turn(right);
+				this->turn(left);
+			}
+		}
+		else // one car is behind the other, slow down the car behind, speed up the car front
+		{
+			GLfloat amount = 0.05f;
+			if (other->getCenter().getZ() < this->getCenter().getZ()) // other car is at the front
+			{
+				other->setVelocity(other->getVelocity() + amount);
+				this->setVelocity(this->getVelocity() - amount);
+			}
+			else
+			{
+				other->setVelocity(other->getVelocity() - amount);
+				this->setVelocity(this->getVelocity() + amount);
+			}
+		}
+	}
+}
+
+bool Car::checkCollision(Cube* cube)
+{
+	Vector otherCtr = cube->getCenter(), center = this->bounding_box->getCenter();
+
+	GLfloat zd = abs(otherCtr.getZ() - center.getZ()),
+		yd = abs(otherCtr.getY() - center.getY()),
+		xd = abs(otherCtr.getX() - center.getX());
+
+	bool z = 0, y = 0, x = 0;
+
+	if (zd < (cube->getDepth() / 2 + this->bounding_box->getDepth() / 2)) z = true;
+
+	if (yd < (cube->getHeight() / 2 + this->bounding_box->getHeight() / 2)) y = true;
+
+	if (xd < (cube->getWidth() / 2 + this->bounding_box->getWidth() / 2)) x = true;
+
+	return x && y && z;
 }

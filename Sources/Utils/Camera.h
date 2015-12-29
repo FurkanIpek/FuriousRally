@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector.h"
+#include "Constants.h"
 
 class Camera {
 private:
@@ -53,4 +54,6 @@ public:
 			center.getX(), center.getY(), center.getZ(),
 			tilt.getX(), tilt.getY(), tilt.getZ());
 	}
+
+	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 };

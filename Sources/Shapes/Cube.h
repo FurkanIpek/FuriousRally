@@ -29,4 +29,9 @@ public:
 	void translate(Vector translation_vec);
 	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 	Vector getCenter() { return center; }
+	void visibility(bool vis) { is_bounding_box = vis; }
+	GLfloat getHeight() { return height; }
+	GLfloat getWidth() { return width; }
+	GLfloat getDepth() { return depth; }
+	Vector* getPoints() { return points; }
 };
