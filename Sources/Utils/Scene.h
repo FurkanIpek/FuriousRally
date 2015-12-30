@@ -4,17 +4,16 @@
 class Scene {
 private:
 	Car* car;
-	Camera scene_cam;
-	Sphere* sun;
-	Cube* skyCube;
 	Cube* treasureBox;
 
-	GLfloat x1 = -1.00f, x2 = 100.0f, x3 = -1.0f;
+	GLfloat x1 = 15.50f, x2 = 100.0f, x3 = -1.0f;
 
 	std::vector<Car*> AIcars;
 	std::vector<Shape*> objects;
+	std::vector<Fire*> fires;
 
 	bool keys[256] = { false };
+	bool cheatMode;
 
 	Scene();
 	void ground();
@@ -22,7 +21,9 @@ private:
 	void outOfRoadCheck(Car*);
 	void createTreasureBox();
 	void prizeCheck();
-	void portForward(Car* vehicle);
+	void portForward(Car* car);
+	void roadHeight(Car* car);
+	void isCarReachedFinishLine(Car* car);
 
 	Scene(Scene const&);              // Don't Implement
 	void operator=(Scene const&);	  // Don't implement
@@ -42,4 +43,7 @@ public:
 	void moveAIcars();
 	void draw();
 	void setCameraPos();
+	void onClose(int val);
+
+	GLfloat trX, trY, zoom, rotation;
 };

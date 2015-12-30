@@ -1,7 +1,8 @@
 #include "Car.h"
 #include "..\Utils\Constants.h"
+#include "..\Utils\Camera.h"
 
-Car::Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d) : center(center)
+Car::Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d, bool user) : center(center)
 {
 	velocity = 0.0f;
 	acceleration = 0.0f;
@@ -9,6 +10,8 @@ Car::Car(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d) : center(cen
 	speedLimit = 0.80f;
 	deccelerating = false;
 	state = maxTurn / 2;
+	turningAngle = turnAngle;
+	isUser = user;
 	
 	bounding_box = new Cube(clr, center, h + 0.5f, w, d, true);
 
@@ -113,35 +116,48 @@ void Car::decelerate(bool anchors)
 	}
 }
 
-void Car::turn(TURN side)
+bool Car::turn(TURN side)
 {
-	if (velocity == 0.0f) return;
+	if (velocity == 0.0f) return false;
 	GLfloat ang;
 
 	if (side == left)
 	{
 		if (state >= 1) state--;
-		else return;
+		else return false;
 		// positive angle
-		ang = turnAngle;
+		ang = turningAngle;
 	}
 	else
 	{
 		if (state <= maxTurn) state++;
-		else return;
+		else return false;
 		// negative angle
-		ang = -turnAngle;
+		ang = -turningAngle;
 	}
 
-	for (int i = 0; i < parts.size(); i++)//(auto part : parts)
+	rotate(ang, 0.0f, 1.0f, 0.0f);
+	
+	return true;
+}
+
+void Car::rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+{
+	for (auto part : parts)
 	{
-		//if (i == 4 || i == 5) ang *= 1.25f;
-		parts[i]->translate(center.negative());
-		parts[i]->rotate(ang, 0.0f, 1.0f, 0.0f);
-		parts[i]->translate(center);
-		//if (i == 4 || i == 5) ang /= 1.25f;
+		part->translate(center.negative());
+		part->rotate(angle, x, y, z);
+		part->translate(center);
 	}
-	direction.rotate(ang, 0.0f, 1.0f, 0.0f);
+	direction.rotate(angle, 0.0f, 1.0f, 0.0f);
+}
+
+void Car::translate(Vector vec)
+{
+	Vector cen = center;
+	move(center.negative());
+	move(vec);
+	move(cen);
 }
 
 void Car::straighten()
@@ -177,32 +193,45 @@ void Car::checkCollision(Car* other)
 	{
 		if (z && zd < bnd_bx->getDepth() / 4) // side to side crash
 		{
+			Vector l(-0.1f, 0.0f, 0.0f),
+				r(0.1f, 0.0f, 0.0f);
 			this->setVelocity(this->getVelocity() - 0.1f);
 			other->setVelocity(other->getVelocity() - 0.1f);
 
-			if (other->getCenter().getX() < this->getCenter().getX()) // other car is at the right
+			if (other->getCenter().getX() < this->getCenter().getX()) // other car is at the left
 			{
-				other->turn(right);
-				this->turn(left);
+				other->turn(left);
+				other->translate(l);
+				if (this->turn(right) && isUser)
+					Camera::instance().rotate(-turnAngle);
+				this->translate(r);
 			}
 			else
 			{
 				other->turn(right);
-				this->turn(left);
+				other->translate(r);
+				if (this->turn(left) && isUser)
+					Camera::instance().rotate(turnAngle);
+				this->translate(l);
 			}
 		}
 		else // one car is behind the other, slow down the car behind, speed up the car front
 		{
-			GLfloat amount = 0.05f;
+			GLfloat amount = abs(other->getVelocity() - this->getVelocity());
+			GLfloat k = 2.0f;
 			if (other->getCenter().getZ() < this->getCenter().getZ()) // other car is at the front
 			{
 				other->setVelocity(other->getVelocity() + amount);
+				other->translate(Vector(0.0f, 0.0f, -k * amount));
 				this->setVelocity(this->getVelocity() - amount);
+				this->translate(Vector(0.0f, 0.0f, k * amount));
 			}
 			else
 			{
 				other->setVelocity(other->getVelocity() - amount);
+				other->translate(Vector(0.0f, 0.0f, k * amount));
 				this->setVelocity(this->getVelocity() + amount);
+				this->translate(Vector(0.0f, 0.0f, -k * amount));
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 
 #include <string>
 
-typedef enum {YELLOW, RED, GRAY, WHITE, BLACK, PURPLE, BLUE, GREEN} COLORS;
+typedef enum {YELLOW, RED, GRAY, WHITE, BLACK, PURPLE, BLUE, GREEN, BROWN} COLORS;
 
 class Color {
 private:
@@ -54,13 +54,16 @@ public:
 		case PURPLE: color = Color(0.39f, 0.0f, 0.78f, alpha);
 			break;
 
-		case BLUE: color = Color(0.0f, 0.39f, 0.78f, alpha);
+		case BLUE: color = Color(0.0f, 0.01f, 0.2f, alpha);
 			break;
 
 		case GREEN: color = Color(0.49f, 0.98f, 0.0f, alpha);
 			break;
 
-		default: color = Color(0.70f, 0.65f, 0.50f, alpha);
+		case BROWN: color = Color(0.40f, 0.20f, 0.0f, alpha);
+			break;
+
+		default: color = Color(0.70f, 0.65f, 0.0f, alpha);
 		}
 
 		return color;

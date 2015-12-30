@@ -18,6 +18,9 @@ private:
 	Vector normals[6];
 
 	bool is_bounding_box;
+	bool prize_box;
+	GLuint texture;
+	void drawWithText();
 
 public:
 	Cube();
@@ -26,6 +29,7 @@ public:
 
 	void setColor(Color clr) { color = clr; }
 	void draw();
+	void prizeBox(GLuint text) { prize_box = true; texture = text; }
 	void translate(Vector translation_vec);
 	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 	Vector getCenter() { return center; }

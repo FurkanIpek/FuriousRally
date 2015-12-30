@@ -6,18 +6,18 @@
 class Camera {
 private:
 	Vector eye, center, tilt;
+	GLfloat angle;
+
+	Camera();
 
 public:
-	Camera()
+	static Camera& instance()
 	{
-		eye = Vector(0.0f, 0.0f, 0.0f);
-		center = Vector(0.0f, 0.0f, -1.0f);
-		tilt = Vector(0.0f, 1.0f, 0.0f);
-		
-		lookThroughMe();
+		static Camera camera;
+		return camera;
 	}
 
-	void setEyePos(Vector v) { eye = v; }
+	void setEyePos(Vector v);
 	void setCenter(Vector v) { center = v; }
 	void setTilt(Vector v) { tilt = v; }
 
@@ -25,35 +25,9 @@ public:
 	Vector getCenter() { return center; }
 	Vector getTilt() { return tilt; }
 
-	void move(GLfloat xv, GLfloat yv, GLfloat zv)
-	{
-		Vector translation_vec(xv, yv, zv);
-
-		eye.translate(translation_vec);
-		center.translate(translation_vec);
-
-		lookThroughMe();
-	}
-
-	void lookThroughMe()
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		gluLookAt(eye.getX(), eye.getY(), eye.getZ(),
-			center.getX(), center.getY(), center.getZ(),
-			tilt.getX(), tilt.getY(), tilt.getZ());
-	}
-
-	void lookThroughMe(Vector eye_pos)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		gluLookAt(eye_pos.getX(), eye_pos.getY(), eye_pos.getZ(),
-			center.getX(), center.getY(), center.getZ(),
-			tilt.getX(), tilt.getY(), tilt.getZ());
-	}
-
-	void rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+	void lookThroughMe();
+	void lookThroughMe(Vector eye_pos);
+	void rotate(GLfloat angle);
+	void changeView(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+	void resetAngle() { angle = 0.0f; }
 };

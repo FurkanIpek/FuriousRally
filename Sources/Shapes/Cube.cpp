@@ -12,6 +12,7 @@ Cube::Cube(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d, bool is_bn
 	right = center.getY() + height / 2;
 	front = center.getZ() + depth / 2;
 	is_bounding_box = is_bn_bx;
+	prize_box = false;
 
 	points[0] = Vector(top, right, front - depth);
 	points[1] = Vector(top - width, right, front - depth);
@@ -32,9 +33,64 @@ Cube::Cube(Color clr, Vector center, GLfloat h, GLfloat w, GLfloat d, bool is_bn
 
 Cube::~Cube() {}
 
+void Cube::drawWithText()
+{
+	GLfloat t = 1.f / 3.f;
+	glPushMatrix();
+
+	glColor4f(1, 1, 1, 1);
+	glEnable(GL_TEXTURE_2D); glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_QUADS);
+
+	glNormal3f(normals[0].getX(), normals[0].getY(), normals[0].getZ()); // TOP
+	glTexCoord2f(t, t); glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // right bot
+
+	glNormal3f(normals[1].getX(), normals[1].getY(), normals[1].getZ()); // BOT
+	glTexCoord2f(t, t); glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // right bot
+
+	glNormal3f(normals[2].getX(), normals[2].getY(), normals[2].getZ()); // FRONT
+	glTexCoord2f(t, t); glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // right bot
+
+	glNormal3f(normals[3].getX(), normals[3].getY(), normals[3].getZ()); // BACK
+	glTexCoord2f(t, t); glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right bot
+
+	glNormal3f(normals[4].getX(), normals[4].getY(), normals[4].getZ()); // LEFT
+	glTexCoord2f(t, t); glVertex3f(points[2].getX(), points[2].getY(), points[2].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[1].getX(), points[1].getY(), points[1].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[5].getX(), points[5].getY(), points[5].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[6].getX(), points[6].getY(), points[6].getZ()); // right bot
+
+	glNormal3f(normals[5].getX(), normals[5].getY(), normals[5].getZ()); // RIGHT
+	glTexCoord2f(t, t); glVertex3f(points[0].getX(), points[0].getY(), points[0].getZ()); // right top
+	glTexCoord2f(t, 0); glVertex3f(points[3].getX(), points[3].getY(), points[3].getZ()); // left top
+	glTexCoord2f(0, 0); glVertex3f(points[7].getX(), points[7].getY(), points[7].getZ()); // left bot
+	glTexCoord2f(0, t); glVertex3f(points[4].getX(), points[4].getY(), points[4].getZ()); // right bot
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+}
+
 void Cube::draw()
 {
 	if (is_bounding_box) return;
+	if (prize_box) 
+	{
+		drawWithText(); 
+		return;
+	}
 	glPushMatrix();
 
 	glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());

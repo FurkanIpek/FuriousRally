@@ -14,6 +14,7 @@
 #include "..\Shapes\Sphere.h"
 #include "..\Shapes\Triangle.h"
 #include "..\Shapes\Cylinder.h"
+#include "..\Shapes\Fire.h"
 
 #include "..\Objects\Object.h"
 #include "..\Objects\Car.h"
